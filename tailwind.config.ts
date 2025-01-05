@@ -4,6 +4,7 @@ import type { Config } from 'tailwindcss';
 // 1. Import the Skeleton plugin
 import { skeleton, contentPath } from '@skeletonlabs/skeleton/plugin';
 import * as themes from '@skeletonlabs/skeleton/themes';
+import forms from '@tailwindcss/forms';
 
 const config = {
 	// 2. Opt for dark mode to be handled via the class method
@@ -19,6 +20,7 @@ const config = {
 	plugins: [
 		// 4. Append the Skeleton plugin (after other plugins)
 		require('@tailwindcss/typography'),
+		forms,
 		skeleton({
 			themes: [themes.cerberus]
 		})

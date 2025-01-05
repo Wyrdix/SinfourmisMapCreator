@@ -17,6 +17,10 @@ interface Node {
 	x: number;
 	y: number;
 	neighbors: EdgeData[];
+	max_food: number;
+	initial_food: number;
+	regen: number;
+	total_available: number;
 }
 
 interface WorldMap {

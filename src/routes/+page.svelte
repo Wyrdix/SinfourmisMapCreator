@@ -152,6 +152,28 @@
 	}
 
 	function onKeyDown(e: KeyboardEvent) {}
+
+	const node = {
+		get value() {
+			const v = $selected_map?.nodes?.find((v) => v.id === $selected_node) || ({} as Node);
+			if (!v.initial_food) v.initial_food = 0;
+			if (!v.max_food) v.max_food = 0;
+			if (!v.regen) v.regen = 0;
+			if (!v.total_available) v.total_available = 0;
+			if (v.max_food < v.initial_food) {
+				v.initial_food = Math.min(v.initial_food, v.max_food);
+				node.value = v;
+			}
+			return v;
+		},
+		set value(value) {
+			if ($selected_map && value)
+				$selected_map.nodes = $selected_map.nodes.map((v) => {
+					if (v.id != $selected_node) return v;
+					else return value;
+				});
+		}
+	};
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -286,12 +308,118 @@
 						stroke-width={'2'}
 						data-id={node.id}
 					/>
+
+					{#if node.type === 'EAU'}
+						<circle cx={node.x} cy={node.y} r={10} fill={'blue'} />
+					{/if}
+
+					{#if node.type === 'REINE'}
+						{#each [0, 1, 2, 3] as i}
+							<path
+								d="M -10 0 A 10 10 0 0 0 {10 * Math.cos(Math.PI * 0.65)} {10 *
+									Math.sin(Math.PI * 0.65)}"
+								stroke={'black'}
+								stroke-width={5}
+								transform="translate({node.x} , {node.y})  rotate({i * 90})"
+							/>
+						{/each}
+					{/if}
+
+					{#if node.type === 'NOURRITURE'}
+						<circle
+							cx={node.x}
+							cy={node.y}
+							r={(16 * node.initial_food) /
+								$selected_map.nodes
+									.filter((v) => v.type === 'NOURRITURE')
+									.map((v) => v.max_food || 0)
+									.reduce((a, b) => Math.max(a, b), 0)}
+							fill={'orange'}
+							data-id={node.id}
+						/>
+						<circle
+							cx={node.x}
+							cy={node.y}
+							r={(16 * (node.max_food || 0)) /
+								$selected_map.nodes
+									.filter((v) => v.type === 'NOURRITURE')
+									.map((v) => v.max_food || 0)
+									.reduce((a, b) => Math.max(a, b), 0)}
+							fill="none"
+							stroke={'red'}
+							stroke-width={2}
+							data-id={node.id}
+						/>
+					{/if}
 				{/each}</g
 			>
 		</svg>
 		{#if $selected_node}
-			<div class="label absolute right-0 top-0 m-5 flex w-1/6 flex-col rounded-md p-2">
-				<h1 style="h1 bg-surface-300">Node modifier</h1>
+			<div
+				class="label absolute right-0 top-0 m-5 flex w-1/6 flex-col rounded-md bg-surface-300 p-2"
+			>
+				<h1 style="h1">Node modifier</h1>
+				<div class="flex flex-col items-center">
+					<div class="mx-2 flex flex-row items-center justify-start">
+						Type
+						<select
+							class="select m-2 w-min"
+							bind:value={node.value.type}
+							onchange={(e) => {
+								$selected_map.nodes = $selected_map.nodes.map((v) => {
+									if (v.id != $selected_node) return v;
+									else return { ...v, nodeType: (e as any).target.__value };
+								});
+							}}
+						>
+							{#each ['VIDE', 'EAU', 'NOURRITURE', 'REINE'].map((v, i) => [v, i]) as s}
+								<option value={s[0]}>{s[0]}</option>
+							{/each}
+						</select>
+					</div>
+					{#if node.value.type === 'NOURRITURE'}
+						<div class="mx-2 flex flex-row items-center justify-start">
+							Current Food
+							<input
+								type="number"
+								class="input m-2 w-20 p-2"
+								min="0"
+								max={node.value.max_food}
+								bind:value={node.value.initial_food}
+							/>
+						</div>
+
+						<div class="mx-2 flex flex-row items-center justify-start">
+							Max Food
+							<input
+								type="number"
+								class="input m-2 w-20 p-2"
+								min="0"
+								bind:value={node.value.max_food}
+							/>
+						</div>
+
+						<div class="mx-2 flex flex-row items-center justify-start">
+							Regen
+							<input
+								type="number"
+								class="input m-2 w-20 p-2"
+								min="0"
+								bind:value={node.value.regen}
+							/>
+						</div>
+
+						<div class="mx-2 flex flex-row items-center justify-start">
+							Total Available
+							<input
+								type="number"
+								class="input m-2 w-20 p-2"
+								min="0"
+								bind:value={node.value.total_available}
+							/>
+						</div>
+					{/if}
+				</div>
 			</div>
 		{/if}
 	</div>

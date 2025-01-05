@@ -29,7 +29,6 @@ interface WorldMap {
 }
 
 interface WorldMapMeta {
-	name: string;
 	x_grid: number;
 	y_grid: number;
 }

@@ -212,7 +212,6 @@
 				bind:value={$scale}
 			/>
 		</div>
-
 		<div class="flex-1"></div>
 		<div class="mx-2 flex w-1/12 justify-end font-thin text-gray-500">
 			X {$x_origin} ; Y {$y_origin}

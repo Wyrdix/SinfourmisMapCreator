@@ -117,8 +117,8 @@
 				else
 					return {
 						...v,
-						x: local_to_real_x(e.offsetX),
-						y: local_to_real_y(e.offsetY)
+						x: local_to_real_x(e.offsetX + 0.5),
+						y: local_to_real_y(e.offsetY + 0.5)
 					};
 			});
 		}
@@ -290,7 +290,7 @@
 			>
 		</svg>
 		{#if $selected_node}
-			<div class="absolute right-0 top-0 m-5 flex w-1/6 flex-col rounded-md label	 p-2">
+			<div class="label absolute right-0 top-0 m-5 flex w-1/6 flex-col rounded-md p-2">
 				<h1 style="h1 bg-surface-300">Node modifier</h1>
 			</div>
 		{/if}

@@ -1,16 +1,16 @@
 <script lang="ts">
 	import '../app.css';
-	import { Autocomplete, LightSwitch, popup, type PopupSettings } from '@skeletonlabs/skeleton';
-	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
+	import { Switch } from '@skeletonlabs/skeleton-svelte';
+	import { dark } from '../stores';
 
-	import { storePopup } from '@skeletonlabs/skeleton';
-	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
+	// import { storePopup } from '@skeletonlabs/skeleton';
+	// storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
-	let world_selector_popupsettings: PopupSettings = {
-		event: 'focus-click',
-		target: 'popupAutocomplete',
-		placement: 'bottom'
-	};
+	// let world_selector_popupsettings: PopupSettings = {
+	// 	event: 'focus-click',
+	// 	target: 'popupAutocomplete',
+	// 	placement: 'bottom'
+	// };
 
 	let selected_world: string = '';
 
@@ -28,7 +28,7 @@
 </script>
 
 <div class="flex h-lvh flex-col">
-	<div class="variant-soft-surface flex flex-row items-center p-2">
+	<div class="flex flex-row items-center bg-surface-400 p-2">
 		Sinfourmis
 
 		<div class="flex-1"></div>
@@ -50,7 +50,9 @@
 
 		<div class="flex-1"></div>
 
-		<LightSwitch />
+		<Switch name="Dark" bind:checked={$dark} />
+
+		<!-- <LightSwitch /> -->
 	</div>
 	<slot></slot>
 </div>

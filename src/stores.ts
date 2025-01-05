@@ -34,6 +34,23 @@ selected_map.subscribe((v) => {
 	if (browser) return (localStorage.local_maps = JSON.stringify(v));
 });
 
+export const dark: Writable<boolean> = writable(
+	(() => {
+		if (!browser) return undefined;
+		const v = localStorage.getItem('dark');
+		if (!v) return false;
+		document.body.classList.toggle('dark', JSON.parse(v));
+		return JSON.parse(v);
+	})()
+);
+
+dark.subscribe((v) => {
+	if (browser) {
+		document.body.classList.toggle('dark', v);
+		return (localStorage.dark = JSON.stringify(v));
+	}
+});
+
 // local_maps.subscribe((val) => {
 // 	if (browser) return (localStorage.local_maps = JSON.stringify(val));
 // });

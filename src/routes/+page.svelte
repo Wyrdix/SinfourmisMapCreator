@@ -158,7 +158,7 @@
 {#if $selected_map}
 	<div class="flex flex-row items-center justify-center">
 		<div class="flex-1"></div>
-		<div class="mx-2">
+		<div class="mx-2 flex flex-row items-center">
 			X Grid
 			<input
 				type="number"
@@ -168,7 +168,7 @@
 				bind:value={$selected_map.x_grid}
 			/>
 		</div>
-		<div class="mx-2">
+		<div class="mx-2 flex flex-row items-center">
 			Y Grid
 			<input
 				type="number"
@@ -192,7 +192,7 @@
 		</div>
 
 		<div class="flex-1"></div>
-		<div class="mx-2 font-thin text-gray-500">
+		<div class="mx-2 flex w-1/12 justify-end font-thin text-gray-500">
 			X {$x_origin} ; Y {$y_origin}
 		</div>
 	</div>
@@ -289,5 +289,10 @@
 				{/each}</g
 			>
 		</svg>
+		{#if $selected_node}
+			<div class="absolute right-0 top-0 m-5 flex w-1/6 flex-col rounded-md label	 p-2">
+				<h1 style="h1 bg-surface-300">Node modifier</h1>
+			</div>
+		{/if}
 	</div>
 {/if}

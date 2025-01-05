@@ -1,38 +1,40 @@
-# sv
+# Sinfourmis map builder
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Local website used to build and modify maps for sinfourmis.
 
-## Creating a project
+## Keybinds
 
-If you're seeing this, you've probably already done this step. Congrats!
+### Moving and scaling
+
+To move hold left click and drag
+To scale hold shift and scroll
+
+If you're lost you can see coordinates in the upper right corner (nodes should be placed around 0 0)
+
+### Node
+
+LeftClick on a node or (on a edge) to select it
+DELETE delete it
+
+Once a node is selected hold shift and left click on another node to add an edge (it will select the next node)
+Once a node is selected you can also modify it's properties on the tab on the right
+
+### Snapping
+
+To better place node you can always hold ctrl to snap the node on a grid, the grid columns and rows size can be modified above
+
+## Using
+
+To start the website locally
+
+Run once :
 
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+npm i
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Then anytime you want to use the website run :
 
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.

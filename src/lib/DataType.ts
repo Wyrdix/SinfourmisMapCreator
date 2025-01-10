@@ -16,7 +16,7 @@ interface Node {
 	type: NodeType;
 	x: number;
 	y: number;
-	neighbors: EdgeData[];
+	neighbors?: EdgeData[];
 	max_food: number;
 	initial_food: number;
 	regen: number;

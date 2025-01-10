@@ -90,7 +90,7 @@
 				if (shift_pressed && $selected_node) {
 					$selected_map.nodes = $selected_map.nodes.map((v) => {
 						if (v.id != $selected_node) return v;
-						else return { ...v, neighbors: v.neighbors.concat({ to: newId, life: 1 }) };
+						else return { ...v, neighbors: (v.neighbors || []).concat({ to: newId, life: 1 }) };
 					});
 				} else {
 					moving_node = newId;
@@ -136,7 +136,7 @@
 				$selected_map.nodes = $selected_map.nodes
 					.filter((v) => v.id !== $selected_node)
 					.map((v) => {
-						return { ...v, neighbors: v.neighbors.filter((o) => o.to !== $selected_node) };
+						return { ...v, neighbors: (v.neighbors || []).filter((o) => o.to !== $selected_node) };
 					});
 				$selected_node = undefined;
 			}
@@ -144,7 +144,7 @@
 				const edge = $selected_edge;
 				$selected_map.nodes = $selected_map.nodes.map((v) => {
 					if (v.id != edge[0]) return v;
-					else return { ...v, neighbors: v.neighbors.filter((o) => o.to != edge[1]) };
+					else return { ...v, neighbors: (v.neighbors || []).filter((o) => o.to != edge[1]) };
 				});
 				$selected_edge = undefined;
 			}
@@ -277,7 +277,7 @@
 				{/if}
 
 				{#each $selected_map.nodes
-					.map((v) => v.neighbors
+					.map((v) => (v.neighbors || [])
 							.map((x) => [v, $selected_map.nodes.find((o) => o.id == x.to)])
 							.filter((x) => x[1])
 							.map((x) => x as [Node, Node]))

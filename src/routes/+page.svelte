@@ -19,13 +19,13 @@
 	let scale: Writable<number | undefined> = writable(1);
 
 	let local_to_real_x = (v: number) => {
-		const newV = v / ($scale || 1) - $x_origin;
+		const newV = (v - $x_origin) / ($scale || 1);
 		if (ctrl_pressed && $selected_map)
 			return Math.round(newV / $selected_map.x_grid) * $selected_map.x_grid;
 		return newV;
 	};
 	let local_to_real_y = (v: number) => {
-		const newV = v / ($scale || 1) - $y_origin;
+		const newV = (v - $y_origin) / ($scale || 1);
 		if (ctrl_pressed && $selected_map)
 			return Math.round(newV / $selected_map.y_grid) * $selected_map.y_grid;
 		return newV;
@@ -33,7 +33,6 @@
 
 	function onClick(e: MouseEvent) {
 		if (!e.target || !$selected_map) return;
-
 		const target = e.target as any;
 
 		if (target?.__attributes) {
@@ -117,8 +116,8 @@
 				else
 					return {
 						...v,
-						x: local_to_real_x(e.offsetX + 0.5),
-						y: local_to_real_y(e.offsetY + 0.5)
+						x: local_to_real_x(e.offsetX),
+						y: local_to_real_y(e.offsetY)
 					};
 			});
 		}

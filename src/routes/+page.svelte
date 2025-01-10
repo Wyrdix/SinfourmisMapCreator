@@ -251,26 +251,25 @@
 		>
 			<g transform={`translate(${$x_origin}, ${$y_origin}) scale(${$scale || 1})`}>
 				{#if ctrl_pressed}
-					{#each Array.apply(null, Array(Math.round(local_to_real_x(width) - local_to_real_x(0) / $selected_map.x_grid))).map((v, i) => i * $selected_map.x_grid + local_to_real_x(0)) as x}
+						{#each Array.from({ length: Math.round((local_to_real_y(height) - local_to_real_y(0)) / $selected_map.y_grid) }).map((_, i) => i * $selected_map.y_grid + local_to_real_y(0)) as y}
 						<line
-							x1={x}
-							x2={x}
-							y1={-$y_origin}
-							y2={-$y_origin + height / ($scale || 1)}
-							stroke={'gray'}
-							stroke-dasharray={'1 5'}
-							stroke-width={'2'}
-						/>
-					{/each}
-					{#each Array.apply(null, Array(Math.round(local_to_real_y(height) - local_to_real_y(0) / $selected_map.y_grid))).map((v, i) => i * $selected_map.y_grid + local_to_real_y(0)) as y}
-						<line
-							x1={-$x_origin}
-							x2={-$x_origin + width / ($scale || 1)}
+							x1={local_to_real_x(0)}
+							x2={local_to_real_x(width)}
 							y1={y}
 							y2={y}
 							stroke={'gray'}
-							stroke-dasharray={'1 5'}
-							stroke-width={'2'}
+							stroke-width={'1'}
+						/>
+					{/each}
+					{#each Array.apply(null, Array(Math.round((local_to_real_x(width) - local_to_real_x(0)) / $selected_map.x_grid)))
+							.map((v, i) => i * $selected_map.x_grid + local_to_real_x(0)) as x}
+						<line
+							x1={x}
+							x2={x}
+							y1={local_to_real_y(0)}
+							y2={local_to_real_y(height)}
+							stroke={'gray'}
+							stroke-width={'1'}
 						/>
 					{/each}
 				{/if}

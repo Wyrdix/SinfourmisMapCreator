@@ -19,13 +19,13 @@
 	let scale: Writable<number | undefined> = writable(1);
 
 	let local_to_real_x = (v: number) => {
-		const newV = v / ($scale || 1) + $x_origin;
+		const newV = v / ($scale || 1) - $x_origin;
 		if (ctrl_pressed && $selected_map)
 			return Math.round(newV / $selected_map.x_grid) * $selected_map.x_grid;
 		return newV;
 	};
 	let local_to_real_y = (v: number) => {
-		const newV = v / ($scale || 1) + $y_origin;
+		const newV = v / ($scale || 1) - $y_origin;
 		if (ctrl_pressed && $selected_map)
 			return Math.round(newV / $selected_map.y_grid) * $selected_map.y_grid;
 		return newV;

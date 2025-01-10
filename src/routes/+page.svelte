@@ -308,7 +308,7 @@
 					/>
 
 					{#if node.type === 'EAU'}
-						<circle cx={node.x} cy={node.y} r={10} fill={'blue'} />
+						<circle cx={node.x} cy={node.y} r={10} fill={'blue'} data-id={node.id} />
 					{/if}
 
 					{#if node.type === 'REINE'}
@@ -319,6 +319,7 @@
 								stroke={'black'}
 								stroke-width={5}
 								transform="translate({node.x} , {node.y})  rotate({i * 90})"
+								data-id={node.id}
 							/>
 						{/each}
 					{/if}

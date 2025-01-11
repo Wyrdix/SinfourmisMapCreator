@@ -16,16 +16,16 @@
 	let width: number = 0;
 	let x_origin: Writable<number> = writable(0);
 	let y_origin: Writable<number> = writable(0);
-	let scale: Writable<number | undefined> = writable(1);
+	let scale: Writable<number> = writable(10);
 
 	let local_to_real_x = (v: number) => {
-		const newV = (v - $x_origin) / ($scale || 1);
+		const newV = (v - $x_origin) / ($scale);
 		if (ctrl_pressed && $selected_map)
 			return Math.round(newV / $selected_map.x_grid) * $selected_map.x_grid;
 		return newV;
 	};
 	let local_to_real_y = (v: number) => {
-		const newV = (v - $y_origin) / ($scale || 1);
+		const newV = (v - $y_origin) / ($scale);
 		if (ctrl_pressed && $selected_map)
 			return Math.round(newV / $selected_map.y_grid) * $selected_map.y_grid;
 		return newV;
@@ -201,13 +201,13 @@
 		</div>
 
 		<div class="flex flex-row">
-			<input type="range" min="0.5" max="3" step="0.1" bind:value={$scale} />
+			<input type="range" min="10" max="20" step="0.5" bind:value={$scale} />
 			<input
 				type="number"
 				class="input m-2 w-20 p-2"
-				min="0.5"
-				max="3"
-				step="0.1"
+				min="10"
+				max="20"
+				step="0.5"
 				bind:value={$scale}
 			/>
 		</div>
@@ -242,14 +242,14 @@
 			}}
 			onwheel={(e) => {
 				if (shift_pressed && !$starting_view_move) {
-					$scale = Math.min(Math.max(($scale || 1) + Math.sign(e.deltaY) * 0.1, 0.1), 3);
+					$scale = Math.min(Math.max(($scale) + Math.sign(e.deltaY) * 0.1, 10), 20);
 				}
 			}}
 			tabindex={-1}
 			bind:clientHeight={height}
 			bind:clientWidth={width}
 		>
-			<g transform={`translate(${$x_origin}, ${$y_origin}) scale(${$scale || 1})`}>
+			<g transform={`translate(${$x_origin}, ${$y_origin}) scale(${$scale})`}>
 				{#if ctrl_pressed}
 						{#each Array.from({ length: Math.round((local_to_real_y(height) - local_to_real_y(0)) / $selected_map.y_grid) }).map((_, i) => i * $selected_map.y_grid + local_to_real_y(0)) as y}
 						<line
@@ -258,7 +258,7 @@
 							y1={y}
 							y2={y}
 							stroke={'gray'}
-							stroke-width={'1'}
+							stroke-width={'0.2'}
 						/>
 					{/each}
 					{#each Array.apply(null, Array(Math.round((local_to_real_x(width) - local_to_real_x(0)) / $selected_map.x_grid)))
@@ -269,7 +269,7 @@
 							y1={local_to_real_y(0)}
 							y2={local_to_real_y(height)}
 							stroke={'gray'}
-							stroke-width={'1'}
+							stroke-width={'0.2'}
 						/>
 					{/each}
 				{/if}
@@ -290,33 +290,44 @@
 						$selected_edge[1] === node2.id
 							? 'red'
 							: 'gray'}
-						stroke-width={'5'}
+						stroke-width={10/($scale)}
 						data-node1={node1.id}
 						data-node2={node2.id}
 					/>
+					{#if $selected_edge && $selected_edge[0] === node1.id && $selected_edge[1] === node2.id}
+						<text
+							x={(node1.x + node2.x) / 2}
+							y={(node1.y + node2.y) / 2}
+							fill="black"
+							font-size="{50/($scale)}"
+							text-anchor="middle"
+						>
+							{Math.sqrt(Math.pow(node2.x - node1.x, 2) + Math.pow(node2.y - node1.y, 2)).toFixed(2)}
+						</text>
+					{/if}
 				{/each}
 				{#each $selected_map.nodes as node}
 					<circle
 						cx={node.x}
 						cy={node.y}
-						r={20}
+						r={25/($scale)}
 						fill={$selected_node === node.id ? 'yellow' : 'white'}
 						stroke={'black'}
-						stroke-width={'2'}
+						stroke-width={5/$scale}
 						data-id={node.id}
 					/>
 
 					{#if node.type === 'EAU'}
-						<circle cx={node.x} cy={node.y} r={10} fill={'blue'} data-id={node.id} />
+						<circle cx={node.x} cy={node.y} r={10/$scale} fill={'blue'} data-id={node.id} />
 					{/if}
 
 					{#if node.type === 'REINE'}
 						{#each [0, 1, 2, 3] as i}
 							<path
-								d="M -10 0 A 10 10 0 0 0 {10 * Math.cos(Math.PI * 0.65)} {10 *
-									Math.sin(Math.PI * 0.65)}"
+								d="M {-50/$scale} 0 A {50/$scale} {50/$scale} 0 0 0 {(50/$scale) * Math.cos(Math.PI * 0.75)} {(50/$scale) *
+									Math.sin(Math.PI * 0.75)}"
 								stroke={'black'}
-								stroke-width={5}
+								stroke-width={10/$scale}
 								transform="translate({node.x} , {node.y})  rotate({i * 90})"
 								data-id={node.id}
 							/>
@@ -327,25 +338,25 @@
 						<circle
 							cx={node.x}
 							cy={node.y}
-							r={(16 * node.initial_food) /
+							r={(130 * node.initial_food) /
 								$selected_map.nodes
 									.filter((v) => v.type === 'NOURRITURE')
 									.map((v) => v.max_food || 0)
-									.reduce((a, b) => Math.max(a, b), 0)}
+									.reduce((a, b) => Math.max(a, b), 0) / $scale}
 							fill={'orange'}
 							data-id={node.id}
 						/>
 						<circle
 							cx={node.x}
 							cy={node.y}
-							r={(16 * (node.max_food || 0)) /
+							r={(130 * (node.max_food || 0)) /
 								$selected_map.nodes
 									.filter((v) => v.type === 'NOURRITURE')
 									.map((v) => v.max_food || 0)
-									.reduce((a, b) => Math.max(a, b), 0)}
+									.reduce((a, b) => Math.max(a, b), 0) / $scale}
 							fill="none"
 							stroke={'red'}
-							stroke-width={2}
+							stroke-width={5/$scale}
 							data-id={node.id}
 						/>
 					{/if}
